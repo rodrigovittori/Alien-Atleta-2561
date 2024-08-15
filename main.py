@@ -1,26 +1,19 @@
 #pgzero
 
 """
-# M5.L1 - Actividad #3: "La función draw()"
-# Objetivo: presentar el sistema de pgzero a los alumnos
-
-Event hooks en pgzero (funciones especiales):
-https://pygame-zero.readthedocs.io/en/stable/hooks.html?highlight=hooks
-
-Hacer transparente un png: https://onlinepngtools.com/create-transparent-png
-Modificar tamaño de un png: https://onlinepngtools.com/resize-png
-
-Actividad libre: Modificar éste código para mostrar un mensaje personalizado
-                 por pantalla con Pgzero
+# M5.L1 - Actividad #4: "Personaje"
+# Objetivo: enseñar a los alumnos a crear Actores y mostrarlos por pantalla
 """
+WIDTH = 600 # Ancho de la ventana (en px)
+HEIGHT = 300 # Alto de la ventana (en px)
 
-WIDTH = 480 # Ancho de la pantalla (en px)
-HEIGHT = 480 # Alto de la pantalla (en px)
+TITLE = "Juego del Alien Atleta y sus piruetas" # Título para la ventana del juego
+FPS = 30 # Número de fotogramas por segundo
 
-TITLE = "TITULO ÉPICO" # sin archivos
-FPS = 30 # Tope/Límite de FPS (cuadros por segundo) a dibujar
-
+# Actores
+fondo = Actor("background")
+personaje = Actor("alien", (50, 240))
 
 def draw():
-    screen.fill((220, 125, 131))
-    screen.draw.text(TITLE, center=(WIDTH/2, HEIGHT/2), color="white", background="black", fontsize = 48)
+    fondo.draw()
+    personaje.draw()
