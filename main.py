@@ -1,20 +1,22 @@
 #pgzero
 
-# M5.L1 - Actividad #1: "Introducción"
-# Objetivo: presentar el sistema de Kodland a los alumnos
+# M5.L1 - Actividad #2: "Ventana del Juego"
+# Objetivo: presentar el sistema de pgzero a los alumnos
 
-WIDTH = 300 # Ancho de la ventana
-HEIGHT = 300 # Altura de la ventana
+WIDTH = 480 # Ancho de la pantalla (en px)
+HEIGHT = 480 # Alto de la pantalla (en px)
 
-TITLE = "Clicker" # Título de la ventana de juego
-FPS = 30 # Fotogramas por segundo
-count = 0
+TITLE = "TITULO ÉPICO" # sin archivos
+FPS = 30 # Tope/Límite de FPS (cuadros por segundo) a dibujar
+
+#fondo = Actor("fondo_desierto")
+#cactus = Actor("cactus", (360, 400))
+#personaje = Actor("alien", (50, 370))
+#plankton = Actor("plankton", bottomleft=(250, 420))
 
 def draw():
-    screen.fill((32, 191, 107))
-    screen.draw.text(count, center=(150, 150), color="white", fontsize = 96)
-    
-def on_mouse_down(button, pos):
-    global count
-    if button == mouse.LEFT:
-        count = count + 1
+    screen.fill(("#dc7d83"))
+    screen.draw.text(TITLE, center=(WIDTH/2, HEIGHT/2), color="white", background="black", fontsize = 48)
+    #fondo.draw()
+    #cactus.draw()
+    #personaje.draw()
