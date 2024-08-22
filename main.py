@@ -1,16 +1,15 @@
 #pgzero
 
 """
-# M5.L3 - Actividad #7: "Cambiando sprites"
-# Objetivo: Agregar la lógica necesaria para que el sprite del personaje cambie según las acciones del jugador
+# M5.L2 - Actividades Extra
+# Objetivo: Agregar la lógica para que nuestro personaje pueda agacharse
 
-Nota: La tarea 6 se cumple con el código de la actividad #5
+Nota: La primer tarea extra ("Controles mejorados") ya la cumple nuestro código anterior
 
-1º: Crear variable para almacenar la imágen que vamos a asignar al actor en cada frame.
-2º: Agregamos  en update como variable global la variable nva_imagen
-3º: Asignamos un sprite por defecto al iniciar update (en la vble nva_imageb)
-4º: Post-input actualizamos el sprite del personaje para que sea la imágen almacenada en nuestra variable
-
+1º Agregar check para cuando se presione la tecla "s" o la flecha hacia abajo
+2º Modificar la altura del personaje
+3º Cambiar el sprite del personaje
+4º crear un atributo "timer_agachado"
 """
 
 WIDTH = 600 # Ancho de la ventana (en px)
@@ -22,6 +21,7 @@ FPS = 30 # Número de fotogramas por segundo
 # Actores
 fondo = Actor("background")
 personaje = Actor("alien", (50, 240))
+personaje.timer_agachado = 0.0 # Tiempo restante (en segundos) antes de poner de pie al personaje
 caja = Actor("box", (WIDTH - 50, 260))
 
 COOLDOWN_SALTO = 0.6 # tiempo de recarga habilidad salto (en segundos)
@@ -58,7 +58,12 @@ def update(dt): # Podemos traducir "update" como "actualizar", es decir, en ella
     #######################
     
     timer_salto -= dt
+    personaje.timer_agachado -= dt
+    
     nva_imagen = "alien" # Si el personaje NO se mueve, mostraremos esta imágen
+    
+    if (personaje.timer_agachado <= 0):
+        personaje.y = 240
 
     # To-do: migrar a una función
     
@@ -82,6 +87,11 @@ def update(dt): # Podemos traducir "update" como "actualizar", es decir, en ella
     elif (keyboard.left or keyboard.a) and (personaje.x > (int(personaje.width/2))):
         personaje.x -= 5
         nva_imagen = "left"
+    
+    elif (keyboard.down or keyboard.s):
+        personaje.y = 260
+        nva_imagen = "duck"
+        personaje.timer_agachado = 0.1
 
     ### POST INPUT ###
 
