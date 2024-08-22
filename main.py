@@ -1,8 +1,10 @@
 #pgzero
 
 """
-# M5.L1 - Actividad #5: "La función update(dt)"
-# Objetivo: familiarizarnos con la función update()
+# M5.L2 - Actividad #1: "Actualizando la caja"
+# Objetivo: lograr que los obstáculos reaparezcan tras abandonar la ventana
+
+1º Agregar condicion (if)
 """
 WIDTH = 600 # Ancho de la ventana (en px)
 HEIGHT = 300 # Alto de la ventana (en px)
@@ -20,9 +22,18 @@ def draw():
     personaje.draw()
     caja.draw()
 
-def update(dt):
-    personaje.x += 5 # mover el personaje 5 px a la derecha en cada frame
-    caja.x -= 5 # mover la caja 5 px a la izquierda en cada frame
+def update(dt): # Podemos traducir "update" como "actualizar", es decir, en ella contendremos el código que produzca cambios en nuestro juego
+
+    if (personaje.x > (WIDTH - int(personaje.width/2)) ):
+        personaje.x = 0
+    else:
+        personaje.x +=5 # mover el personaje 5 px a la derecha en cada frame
     
-    personaje.angle -= 5
+    if (caja.x < (int(caja.width/2))):
+        caja.x = WIDTH
+    else:
+        caja.x -= 5 # mover la caja 5 px a la izquierda en cada frame
+    
+    if caja.angle > 360:
+        caja.angle -= 360
     caja.angle += 5
