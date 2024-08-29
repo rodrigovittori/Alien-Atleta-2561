@@ -1,13 +1,15 @@
 #pgzero
 
 """
-# [M5.L3 - Actividad #1: "Método Colliderect"]
-# Objetivo: Cambiar el sprite del personaje cuando éste entre en colisión con la caja
+# [M5.L3 - Actividad #2: "Colisión con una abeja"]
+# Objetivo: Agregar lógica de colisión para la abeja
 
-1º Agregar check -> if alien.colliderect(caja)
-    -> alien.image = 'hurt'
+NOTA: En el programa han eliminado la actividad donde creábamos la abeja, así que toca crearla en éste ejercicio.
 
-Fix: corregimos error al reposicionar el personaje tras agacharse
+1º Crear actor abeja
+2º La agregamos en nuestro draw()
+3º Agregamos los controles de movimiento automático para la abeja
+4º Agregamos la condición de colliderect() con un "or"
 
 """
 
@@ -23,6 +25,7 @@ personaje = Actor("alien", (50, 240))
 personaje.timer_agachado = 0.0 # Tiempo restante (en segundos) antes de poner de pie al personaje
 personaje.esta_agachado = False
 caja = Actor("box", (WIDTH - 50, 260))
+abeja = Actor("bee", (WIDTH + 150, 150))
 
 COOLDOWN_SALTO = 0.6 # tiempo de recarga habilidad salto (en segundos)
 timer_salto = 0 # tiempo que debe pasar (en segundos) antes de que nuestro personaje pueda saltar nuevamente
@@ -43,6 +46,7 @@ def draw():
     fondo.draw()
     personaje.draw()
     caja.draw()
+    abreja.draw()
 
     if (timer_salto <= 0):
         screen.draw.text("¡LISTO!", midleft=(20,20), color = (0, 255, 0), fontsize=24)
@@ -76,6 +80,13 @@ def update(dt): # Podemos traducir "update" como "actualizar", es decir, en ella
     if caja.angle > 360:
         caja.angle -= 360
     caja.angle += 5
+
+    # Vamos a chequear que la abeja esté dentro de la pantalla
+    
+    if (abeja.x < -30):
+        abeja.x = WIDTH + 150
+    else:
+        abeja.x -= 5
     
     ################
     # LEER TECLADO #
@@ -101,7 +112,7 @@ def update(dt): # Podemos traducir "update" como "actualizar", es decir, en ella
 
     # To - do: migrar a función
   
-    if (personaje.colliderect(caja)):
+    if (personaje.colliderect(caja) or personaje.colliderect(abeja)):
       if nva_imagen != "hurt":
         nva_imagen = "hurt"
     
