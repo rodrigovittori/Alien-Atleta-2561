@@ -1,15 +1,16 @@
 #pgzero
 
 """
-# [M5.L3 - Actividad #3: "Game Over"]
+# [M5.L3 - Actividad #5: "Puntuación"]
 # Objetivo: Implementar condiciones de derrota, ventana de fin de juego y una condición para reiniciar el juego
 
-1º Crear actor cartel_game_over
-2º Creamos una variable llamada "game_over" que comprueba si la partida ha terminado
-3º En caso de colisión game_over debe ser verdadero
-4º Modificamos nuestro draw() para mostrar el mensaje de fin de juego y prompt para reiniciar en caso de perder
-5º Modificamos update() para que en caso de game_over no sigan moviéndose los obstáculos
-6º Agregamos condición para reiniciar el juego al presionar [Enter]
+Nota: La actividad # 4 ya estaba resuelta por el código de nuestra actividad #3
+
+1º Creamos una variable que almacene nuestra puntuación
+2º Modifico el draw() para que muestre la puntuación
+3º Modifico el reset para que reinicie nuestra puntuación
+4º Aumentaremos la puntuación cada vez que un enemigo haya abandonado la pantalla
+
 
 """
 
@@ -34,6 +35,7 @@ timer_salto = 0 # tiempo que debe pasar (en segundos) antes de que nuestro perso
 anim = 1
 nva_imagen = "alien" # "alien": quieto / "left": mov. izq. / "right" : mov. dcha. / "hurt": tomó daño
 game_over = False
+puntuacion = 0
 
 def animar(op):
     if op == 1:
@@ -49,22 +51,25 @@ def draw():
     if (game_over):
         fondo.draw()
         cartel_game_over.draw()
-        screen.draw.text("Presiona [Enter] para reiniciar", center= (int(WIDTH/2), 2* int(HEIGHT/3)), color = "white", fontsize = 32)
+        screen.draw.text(("Enemigos esquivados: " + str(puntuacion)), center= (int(WIDTH/2), 2* int(HEIGHT/3)), color ="yellow", fontsize=24)
+        screen.draw.text("Presiona [Enter] para reiniciar", center= (int(WIDTH/2), 4* int(HEIGHT/5)), color = "white", fontsize = 32)
 
     else:
         fondo.draw()
         personaje.draw()
         caja.draw()
         abeja.draw()
-    
+
+        screen.draw.text(("Puntuacion: " + str(puntuacion)), midleft=(15, 15), color ="white", fontsize=24)
+        
         if (timer_salto <= 0):
-            screen.draw.text("¡LISTO!", midleft=(20,20), color = (0, 255, 0), fontsize=24)
+            screen.draw.text("¡LISTO!", midright=(WIDTH - 20,20), color = (0, 255, 0), fontsize=24)
         else:
-            screen.draw.text(str(timer_salto), midleft=(20,20), color = "red", fontsize=24)    
+            screen.draw.text(str(timer_salto), midright=(WIDTH - 20,20), color = "red", fontsize=24)    
 
 def update(dt): # Podemos traducir "update" como "actualizar", es decir, en ella contendremos el código que produzca cambios en nuestro juego
 
-    global timer_salto, nva_imagen, game_over
+    global timer_salto, nva_imagen, game_over, puntuacion
 
     if game_over:
 
@@ -84,6 +89,7 @@ def update(dt): # Podemos traducir "update" como "actualizar", es decir, en ella
             caja.pos = (WIDTH + caja.width, 265)
             caja.angle = 0
             abeja.pos = (WIDTH + 150, 150)
+            puntuacion = 0
 
     else:
         
@@ -103,6 +109,7 @@ def update(dt): # Podemos traducir "update" como "actualizar", es decir, en ella
         # To-do: migrar a una función
         
         if (caja.x < (int(caja.width/2))):
+            puntuacion += 1
             caja.x = WIDTH
         else:
             caja.x -= 5 # mover la caja 5 px a la izquierda en cada frame
@@ -114,6 +121,7 @@ def update(dt): # Podemos traducir "update" como "actualizar", es decir, en ella
         # Vamos a chequear que la abeja esté dentro de la pantalla
         
         if (abeja.x < -30):
+            puntuacion += 1
             abeja.x = WIDTH + 150
         else:
             abeja.x -= 5
