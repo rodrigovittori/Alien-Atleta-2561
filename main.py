@@ -1,13 +1,18 @@
 #pgzero
+import random
 
 """
-# [M5.L4 - Actividad #2: "Funciones de movimiento"]
-# Objetivo: Migrar la lógica de movimiento de los enemigos a una función avocada a ello
+# [M5.L4 - Actividad #3: "Enemigos aleatorios"]
+# Objetivo: Llamar al próxim obstáculo según un valor random
 
 Pasos:
-1º Crearemos las funciones actualizar_abeja() y actualizar_caja()
-
-
+1º Importar el módulo random
+2º Crear la vble "próximo enemigo", que tomará un valor random entre 1 y 2
+   (xq sólo tenemos dos tipos de enemigos)
+3º Creamos una función que calcule el valor de nuestro próximo enemigo en forma aleatoria
+4º En update(dt) llamaremos a la función que actualiza el obstáculo "activo", hasta que salga de la pantalla,
+   (entonces reasignaremos ese valor random)
+5º Agregar a la función reiniciar_juego una condición para reestablecer el valor del prox_enemigo a spwanear
 
 """
 
@@ -33,6 +38,7 @@ anim = 1
 nva_imagen = "alien" # "alien": quieto / "left": mov. izq. / "right" : mov. dcha. / "hurt": tomó daño
 game_over = False
 puntuacion = 0
+prox_enemigo = random.randint(1,2) # 1: Caja / 2: Abeja
 
 """  #####################
     # FUNCIONES PROPIAS #
@@ -48,25 +54,35 @@ def animar(op):
     else:
         animate(personaje, tween="bounce_start_end", duration = 2, x= 35, y = HEIGHT-45)
 
+def enemigo_al_azar():
+    """
+    Numero entero de 1 a (cant_enemigos)
+    1: Caja
+    2: Abeja
+    """
+    return random.randint(1, 2) # Nota: actualizar cuando se agreguen tipos de enemigos
+
 def actualizar_abeja():
-    global puntuacion
+    global puntuacion, prox_enemigo
 
     # Vamos a chequear que la abeja esté dentro de la pantalla
     if (abeja.x < (-int(abeja.width))):
          # Si se salió de la pantalla, la reseteo y sumo un punto
         puntuacion += 1
+        prox_enemigo = enemigo_al_azar()
         abeja.x = WIDTH + 150
         
     else:
         abeja.x -= 5
 
 def actualizar_caja():
-    global puntuacion
+    global puntuacion, prox_enemigo
     # To-do: migrar a una función
         
     if (caja.x < (-int(caja.width))):
         # Si se salió de la pantalla, la reseteo y sumo un punto
         puntuacion += 1
+        prox_enemigo = enemigo_al_azar()
         caja.x = WIDTH
         
     else:
@@ -114,7 +130,7 @@ def detectar_colisiones():
 
 def reiniciar_juego():
 
-    global game_over, nva_imagen, timer_salto, puntuacion
+    global game_over, nva_imagen, timer_salto, puntuacion, prox_enemigo
     
     game_over = False
     personaje.pos = (50, 240)
@@ -124,6 +140,7 @@ def reiniciar_juego():
     caja.angle = 0
     abeja.pos = (WIDTH + 350, 150)
     puntuacion = 0
+    prox_enemigo = enemigo_al_azar()
 
 """  ####################
     # FUNCIONES PGZERO #
@@ -174,8 +191,11 @@ def update(dt): # Podemos traducir "update" como "actualizar", es decir, en ella
 
         # Actualizamos los enemigos
         # Nota: creo que ésto después lo migramos a otra función
-        actualizar_caja()
-        actualizar_abeja()
+        if (prox_enemigo == 1):
+            actualizar_caja()
+        elif (prox_enemigo == 2):
+            actualizar_abeja()
+            # Nota: actualizar cuando se agreguen tipos de enemigos
 
         mover_personaje()
 
