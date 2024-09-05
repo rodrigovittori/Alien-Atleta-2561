@@ -2,17 +2,14 @@
 import random
 
 """
-# [M5.L4 - Actividad #3: "Enemigos aleatorios"]
-# Objetivo: Llamar al próxim obstáculo según un valor random
+# [M5.L4 - Actividad #4: "Nivel de dificultad"]
+# Objetivo: Aumentar la velocidad de los enemigos cada vez que esquivemos efectivamente uno de ellos
 
 Pasos:
-1º Importar el módulo random
-2º Crear la vble "próximo enemigo", que tomará un valor random entre 1 y 2
-   (xq sólo tenemos dos tipos de enemigos)
-3º Creamos una función que calcule el valor de nuestro próximo enemigo en forma aleatoria
-4º En update(dt) llamaremos a la función que actualiza el obstáculo "activo", hasta que salga de la pantalla,
-   (entonces reasignaremos ese valor random)
-5º Agregar a la función reiniciar_juego una condición para reestablecer el valor del prox_enemigo a spwanear
+1º Crear una nueva variable llamada "velocidad_enemigos"
+2º Modificar las funciones de movimiento para que los personajes se desplazen a ésta velocidad
+3º Agregar una condición que aumente en uno la velocidad de los enemigos cada vez que esquivemos efectivamente uno de ellos
+4º Agregar una última función que maneje la actualización de los obstáculos
 
 """
 
@@ -39,6 +36,7 @@ nva_imagen = "alien" # "alien": quieto / "left": mov. izq. / "right" : mov. dcha
 game_over = False
 puntuacion = 0
 prox_enemigo = random.randint(1,2) # 1: Caja / 2: Abeja
+velocidad_enemigos = 5 # La velocidad (en px) a la que se mueve el personaje
 
 """  #####################
     # FUNCIONES PROPIAS #
@@ -63,35 +61,49 @@ def enemigo_al_azar():
     return random.randint(1, 2) # Nota: actualizar cuando se agreguen tipos de enemigos
 
 def actualizar_abeja():
-    global puntuacion, prox_enemigo
+    global puntuacion, prox_enemigo, velocidad_enemigos
 
     # Vamos a chequear que la abeja esté dentro de la pantalla
     if (abeja.x < (-int(abeja.width))):
          # Si se salió de la pantalla, la reseteo y sumo un punto
         puntuacion += 1
+        velocidad_enemigos += 1
         prox_enemigo = enemigo_al_azar()
         abeja.x = WIDTH + 150
         
     else:
-        abeja.x -= 5
+        abeja.x -= velocidad_enemigos
 
 def actualizar_caja():
-    global puntuacion, prox_enemigo
+    global puntuacion, prox_enemigo, velocidad_enemigos
     # To-do: migrar a una función
         
     if (caja.x < (-int(caja.width))):
         # Si se salió de la pantalla, la reseteo y sumo un punto
         puntuacion += 1
+        velocidad_enemigos += 1
         prox_enemigo = enemigo_al_azar()
         caja.x = WIDTH
         
     else:
-        caja.x -= 5 # mover la caja 5 px a la izquierda en cada frame
+        caja.x -= velocidad_enemigos # mover la caja 5 px a la izquierda en cada frame
         
     caja.angle += 5
     if caja.angle > 360:
         caja.angle -= 360
+
+def actualizar_enemigos():
+    # Actualizamos la velocidad y movemos el enemigo seleccionado
+    """ 1: Caja / 2: Abeja """
+
+    # Nota: actualizar cuando se agreguen tipos de enemigos
     
+    if (prox_enemigo == 1):
+        actualizar_caja()
+            
+    elif (prox_enemigo == 2):
+        actualizar_abeja()
+
 def mover_personaje():
     global nva_imagen, timer_salto
     nva_imagen = "alien"
@@ -172,12 +184,11 @@ def update(dt): # Podemos traducir "update" como "actualizar", es decir, en ella
 
     if game_over:
         # En caso de game_over
-        if (keyboard.enter) or keyboard.space:
+        if (keyboard.enter):
             reiniciar_juego()
     
     else:
 
-        
         #######################
         # CAMBIOS AUTOMATICOS #
         #######################
@@ -189,13 +200,7 @@ def update(dt): # Podemos traducir "update" como "actualizar", es decir, en ella
             personaje.y = 240
             personaje.esta_agachado = False
 
-        # Actualizamos los enemigos
-        # Nota: creo que ésto después lo migramos a otra función
-        if (prox_enemigo == 1):
-            actualizar_caja()
-        elif (prox_enemigo == 2):
-            actualizar_abeja()
-            # Nota: actualizar cuando se agreguen tipos de enemigos
+        actualizar_enemigos()
 
         mover_personaje()
 
